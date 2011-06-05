@@ -13,7 +13,11 @@ end
 
 node[:pip_python_packages].each_pair do |pkg, version|
     execute "install-#{pkg}" do
-        command "pip install #{pkg}==#{version}"
+        if version.nil?
+            command "pip install #{pkg}"
+        else
+            command "pip install #{pkg}==#{version}"
+        end
         not_if "[ `pip freeze | grep #{pkg} | cut -d'=' -f3` = '#{version}' ]"
     end
 end
